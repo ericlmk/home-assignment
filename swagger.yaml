@@ -1,0 +1,105 @@
+openapi: 3.0.0
+info:
+  description: REST service to validate bank accounts
+  version: 1.0.0
+  title: Home Assignment
+  termsOfService: ""
+  license:
+    name: Eric Lo
+tags:
+  - name: Account
+    description: Account Module
+
+paths:
+  /account/validate:
+    post:
+      tags:
+        - Account
+      requestBody:
+        $ref: "#/components/requestBodies/AccountValidateRequest"
+      responses:
+        "200":
+          description: Successful Operation
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/AccountValidateResponse"
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized Operation
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/UnauthorizedResponse"
+        "500":
+          description: Unexpected Error
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+servers:
+  - url: /assignment/v1
+components:
+  requestBodies:
+    AccountValidateRequest:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/AccountValidateRequest"
+
+  schemas:
+
+    AccountValidateRequest:
+      type: object
+      properties:
+        accountNumber:
+          type: string
+          example: 12345678
+          minLength: 1
+        providers:
+          type: array
+          items:
+            type: string
+            example: "provider1"
+            minLength: 0
+
+    AccountValidateResponse:
+      type: object
+      properties:
+        result:
+          type: array
+          items:
+            $ref: "#/components/schemas/ProviderValidateResult"
+
+    ProviderValidateResult:
+      type: object
+      properties:
+        provider:
+          type: string
+          example: "provider1"
+          minLength: 1
+        isValid:
+          type: boolean
+          nullable: false
+
+    UnauthorizedResponse:
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/BaseResponse"
+
+    ErrorResponse:
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/BaseResponse"
+
+    BaseResponse:
+      type: object
+      properties:
+        code:
+          type: string
+          description: The result code
+        message:
+          type: string
+          description: The description for the result

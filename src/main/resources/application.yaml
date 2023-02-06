@@ -1,0 +1,19 @@
+springfox.documentation.open-api.v3.path: /api-docs
+server:
+  servlet:
+    contextPath: /
+  server:
+    port: 8080
+spring.jackson:
+  date-format: com.ericlo.ha.RFC3339DateFormat
+  serialization:
+    WRITE_DATES_AS_TIMESTAMPS: false
+
+config:
+  requestMaxTime: 2000
+  providerMaxTime: 1000
+  providers:
+    - name: provider1
+      url: https://dev.provider1.com/v1/api/account/validate
+    - name: provider2
+      url: https://dev.provider2.com/v2/api/account/validate
